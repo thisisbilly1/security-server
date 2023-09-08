@@ -7,15 +7,24 @@ import cors from 'cors';
 import fetch from 'node-fetch';
 import { WSServer } from './server.js';
 import { createServer } from 'http';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+
+
+// if the /dist/ folder does not exist, error out
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const path = __dirname + '/security-gui/dist/';
+if (!fs.existsSync(path)) {
+  console.error('The /dist/ folder does not exist. Run `npm run build` first.')
+  process.exit(1)
+}
 
 const app = express();
 const httpServer = createServer(app);
 
-const wsserver = new WSServer(httpServer)
-wsserver.start()
-
 const tokenSecretKey = 'PokiIsDumb';
-
 // middleware
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -28,6 +37,10 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
 }))
+app.use(express.static(path));
+
+const wsserver = new WSServer(httpServer)
+wsserver.start()
 
 const defNotUserDBGitGaurdianDoNotFlagPlz = [
   {
@@ -120,6 +133,10 @@ app.get('/cameras', checkAuthenticated, (req, res) => {
   }
   res.send(cameras)
 })
+
+app.get('/', (req, res) => {
+  res.sendFile(path + 'index.html');
+});
 
 httpServer.listen(4000, () => {
   console.log('Listening on port 4000')

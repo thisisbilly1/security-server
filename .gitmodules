@@ -1,0 +1,3 @@
+[submodule "security-gui"]
+	path = security-gui
+	url = https://github.com/thisisbilly1/security-gui.git
