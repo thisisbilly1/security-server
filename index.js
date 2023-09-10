@@ -134,6 +134,21 @@ app.get('/cameras', checkAuthenticated, (req, res) => {
   res.send(cameras)
 })
 
+app.post('/nightMode', checkAuthenticated, (req, res) => {
+  const cameraId = req.body.cameraId
+  // find the client
+  const client = wsserver.clients.get(cameraId)
+  if (!client) return res.status(404).send('Camera not found')
+  const uri = `http://${client.address}:5000/nightMode`;
+  console.log('proxying to', uri)
+  fetch(uri, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+})
+
 app.get('/', (req, res) => {
   res.sendFile(path + 'index.html');
 });
