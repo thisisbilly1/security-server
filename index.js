@@ -142,6 +142,33 @@ app.post('/nightMode', checkAuthenticated, (req, res) => {
   client.send('nightMode')
 })
 
+app.get('/activities', checkAuthenticated, async (req, res) => {
+  const cameraId = req.query.cameraId
+  // find the client
+  const client = wsserver.clients.get(cameraId)
+  if (!client) return res.status(404).send('Camera not found')
+  const uri = `http://${client.address}:5000/activities`;
+  console.log('proxying to', uri)
+  const proxyRes = await fetch(uri)
+  const contentType = proxyRes.headers.get('content-type')
+  res.set('content-type', contentType)
+  proxyRes.body.pipe(res)
+})
+
+app.get('/image', checkAuthenticated, async (req, res) => {
+  const cameraId = req.query.cameraId
+  const imageId = req.query.imageId
+  // find the client
+  const client = wsserver.clients.get(cameraId)
+  if (!client) return res.status(404).send('Camera not found')
+  const uri = `http://${client.address}:5000/image?imageId=${imageId}`;
+  console.log('proxying to', uri)
+  const proxyRes = await fetch(uri)
+  const contentType = proxyRes.headers.get('content-type')
+  res.set('content-type', contentType)
+  proxyRes.body.pipe(res)
+})
+
 app.get('/', (req, res) => {
   res.sendFile(path + 'index.html');
 });
