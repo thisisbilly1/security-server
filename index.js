@@ -170,6 +170,14 @@ app.get('/image', checkAuthenticated, async (req, res) => {
   proxyRes.body.pipe(res)
 })
 
+app.post('takePicture', checkAuthenticated, (req, res) => {
+  const cameraId = req.body.cameraId
+  const client = wsserver.clients.get(cameraId)
+  if (!client) return res.status(404).send('Camera not found')
+  client.send('takePicture')
+  res.status(200).send('OK')
+})
+
 app.post('/flipHorizontal', checkAuthenticated, (req, res) => {
   const cameraId = req.body.cameraId
   const client = wsserver.clients.get(cameraId)
