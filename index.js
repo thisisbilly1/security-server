@@ -149,11 +149,11 @@ app.get('/activities', checkAuthenticated, async (req, res) => {
 
 app.get('/image', checkAuthenticated, async (req, res) => {
   const cameraId = req.query.cameraId
-  const imageId = req.query.imageId
+  const activityId = req.query.activityId
   // find the client
   const client = wsserver.clients.get(cameraId)
   if (!client) return res.status(404).send('Camera not found')
-  const uri = `http://${client.address}:5000/image?imageId=${imageId}`;
+  const uri = `http://${client.address}:5000/image?activityId=${activityId}`;
   console.log('proxying to', uri)
   const proxyRes = await fetch(uri)
   const contentType = proxyRes.headers.get('content-type')
