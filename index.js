@@ -169,6 +169,20 @@ app.get('/image', checkAuthenticated, async (req, res) => {
   proxyRes.body.pipe(res)
 })
 
+app.post('/flipHorizontal', checkAuthenticated, (req, res) => {
+  const cameraId = req.body.cameraId
+  const client = wsserver.clients.get(cameraId)
+  if (!client) return res.status(404).send('Camera not found')
+  client.send('flipHorizontal')
+})
+
+app.post('/flipVertical', checkAuthenticated, (req, res) => {
+  const cameraId = req.body.cameraId
+  const client = wsserver.clients.get(cameraId)
+  if (!client) return res.status(404).send('Camera not found')
+  client.send('flipVertical')
+})
+
 app.get('/', (req, res) => {
   res.sendFile(path + 'index.html');
 });
