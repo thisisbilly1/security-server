@@ -140,6 +140,7 @@ app.post('/nightMode', checkAuthenticated, (req, res) => {
   const client = wsserver.clients.get(cameraId)
   if (!client) return res.status(404).send('Camera not found')
   client.send('nightMode')
+  res.status(200).send('OK')
 })
 
 app.get('/activities', checkAuthenticated, async (req, res) => {
@@ -174,6 +175,7 @@ app.post('/flipHorizontal', checkAuthenticated, (req, res) => {
   const client = wsserver.clients.get(cameraId)
   if (!client) return res.status(404).send('Camera not found')
   client.send('flipHorizontal')
+  res.status(200).send('OK')
 })
 
 app.post('/flipVertical', checkAuthenticated, (req, res) => {
@@ -181,6 +183,7 @@ app.post('/flipVertical', checkAuthenticated, (req, res) => {
   const client = wsserver.clients.get(cameraId)
   if (!client) return res.status(404).send('Camera not found')
   client.send('flipVertical')
+  res.status(200).send('OK')
 })
 
 app.get('/', (req, res) => {
