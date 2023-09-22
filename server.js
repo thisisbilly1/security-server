@@ -30,7 +30,7 @@ export class WSServer {
 
   sendAll(...args) {
     for (const [id, client] of this.clients) {
-      client.send(message)
+      client.send(...args)
     }
   }
 
