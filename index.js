@@ -163,42 +163,47 @@ app.get('/image', checkAuthenticated, async (req, res) => {
 
 app.post('/takePicture', checkAuthenticated, (req, res) => {
   const cameraId = req.body.cameraId
-  const client = wsserver.clients.get(cameraId)
-  if (!client) return res.status(404).send('Camera not found')
-  client.send('takePicture')
+  try {
+    wsserver.sendOther(cameraId, 'takePicture')
+  } catch (e) {
+    return res.status(404).send('Camera not found')
+  }
   res.status(200).send({ resp: 'OK' })
 })
 
 app.post('/flipHorizontal', checkAuthenticated, (req, res) => {
   const cameraId = req.body.cameraId
-  const client = wsserver.clients.get(cameraId)
-  if (!client) return res.status(404).send('Camera not found')
-  client.send('flipHorizontal')
+  try {
+    wsserver.sendOther(cameraId, 'flipHorizontal')
+  } catch (e) {
+    return res.status(404).send('Camera not found')
+  }
   res.status(200).send({ resp: 'OK' })
 })
 
 app.post('/flipVertical', checkAuthenticated, (req, res) => {
   const cameraId = req.body.cameraId
-  const client = wsserver.clients.get(cameraId)
-  if (!client) return res.status(404).send('Camera not found')
-  client.send('flipVertical')
+  try {
+    wsserver.sendOther(cameraId, 'flipVertical')
+  } catch (e) {
+    return res.status(404).send('Camera not found')
+  }
   res.status(200).send({ resp: 'OK' })
 })
 
 app.post('/nightMode', checkAuthenticated, (req, res) => {
   const cameraId = req.body.cameraId
-  // find the client
-  const client = wsserver.clients.get(cameraId)
-  if (!client) return res.status(404).send('Camera not found')
-  client.send('nightMode')
+  try {
+    wsserver.sendOther(cameraId, 'nightMode')
+  } catch (e) {
+    return res.status(404).send('Camera not found')
+  }
   res.status(200).send({ resp: 'OK' })
 })
 
 app.post('/reboot', checkAuthenticated, (req, res) => {
   // reboots all clients
-  for (const [id, client] of wsserver.clients) {
-    client.send('reboot')
-  }
+  wsserver.sendAll('reboot')
   res.status(200).send({ resp: 'OK' })
 })
 

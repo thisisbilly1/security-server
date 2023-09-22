@@ -28,14 +28,15 @@ export class WSServer {
     this.clients.delete(client.socket.id)
   }
 
-  sendAll(message) {
+  sendAll(...args) {
     for (const [id, client] of this.clients) {
       client.send(message)
     }
   }
 
-  sendOther(message, id) {
+  sendOther(id, ...args) {
     const client = this.clients.get(id)
-    client.send(message)
+    if (!client) throw new Error('Client not found')
+    client.send(...args)
   }
 }
