@@ -202,6 +202,7 @@ app.post('/nightMode', checkAuthenticated, (req, res) => {
 })
 
 app.post('/reboot', checkAuthenticated, (req, res) => {
+  console.log('rebooting everything...');
   // reboots all clients
   wsserver.sendAll('reboot')
   res.status(200).send({ resp: 'OK' })
