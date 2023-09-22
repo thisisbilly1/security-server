@@ -194,6 +194,12 @@ app.post('/nightMode', checkAuthenticated, (req, res) => {
   res.status(200).send('OK')
 })
 
+app.post('/reboot', checkAuthenticated, (req, res) => {
+  // reboots all clients
+  wsserver.sendAll('reboot')
+  res.status(200).send('OK')
+})
+
 app.get('/', (req, res) => {
   res.sendFile(path + 'index.html');
 });
