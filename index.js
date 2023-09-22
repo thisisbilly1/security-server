@@ -166,7 +166,7 @@ app.post('takePicture', checkAuthenticated, (req, res) => {
   const client = wsserver.clients.get(cameraId)
   if (!client) return res.status(404).send('Camera not found')
   client.send('takePicture')
-  res.status(200).send('OK')
+  res.status(200).send({ resp: 'OK' })
 })
 
 app.post('/flipHorizontal', checkAuthenticated, (req, res) => {
@@ -174,7 +174,7 @@ app.post('/flipHorizontal', checkAuthenticated, (req, res) => {
   const client = wsserver.clients.get(cameraId)
   if (!client) return res.status(404).send('Camera not found')
   client.send('flipHorizontal')
-  res.status(200).send('OK')
+  res.status(200).send({ resp: 'OK' })
 })
 
 app.post('/flipVertical', checkAuthenticated, (req, res) => {
@@ -182,7 +182,7 @@ app.post('/flipVertical', checkAuthenticated, (req, res) => {
   const client = wsserver.clients.get(cameraId)
   if (!client) return res.status(404).send('Camera not found')
   client.send('flipVertical')
-  res.status(200).send('OK')
+  res.status(200).send({ resp: 'OK' })
 })
 
 app.post('/nightMode', checkAuthenticated, (req, res) => {
@@ -191,13 +191,15 @@ app.post('/nightMode', checkAuthenticated, (req, res) => {
   const client = wsserver.clients.get(cameraId)
   if (!client) return res.status(404).send('Camera not found')
   client.send('nightMode')
-  res.status(200).send('OK')
+  res.status(200).send({ resp: 'OK' })
 })
 
 app.post('/reboot', checkAuthenticated, (req, res) => {
   // reboots all clients
-  wsserver.sendAll('reboot')
-  res.status(200).send('OK')
+  for (const [id, client] of wsserver.clients) {
+    client.send('reboot')
+  }
+  res.status(200).send({ resp: 'OK' })
 })
 
 app.get('/', (req, res) => {
