@@ -44,7 +44,7 @@ wsserver.start()
 
 const defNotUserDBGitGaurdianDoNotFlagPlz = [
   {
-    us: 'admin', pwHash: '$2b$10$y3xMfcrnovV9uayKgQxXAemr7Es8645NGQLVsmavy.NZpONyBFW3W'
+    us: 'admin', pwHash: '$2b$10$gzp4PZB1/3bXY3NATTsRqOA9QPSMMVuPVBEO7nii57p.MX/G9mBTu'
   }
 ]
 
@@ -66,7 +66,9 @@ app.post('/login', (req, res) => {
   const { username, password } = req.body;
   console.log('logging in', username, password)
   // Check if username and password are valid
-  const user = defNotUserDBGitGaurdianDoNotFlagPlz.find(u => u.us === username);
+  const user = defNotUserDBGitGaurdianDoNotFlagPlz.find(u =>
+    u.us.toLocaleLowerCase() === username.toLocaleLowerCase()
+  );
   if (!user) return res.status(401).send('Invalid credentials');
   const pwIsValid = bcrypt.compareSync(password, user.pwHash);
   
